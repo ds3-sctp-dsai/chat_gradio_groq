@@ -51,6 +51,7 @@ Environment variables in Render:
 - `OPENAI_API_KEY`
 - `OPENAI_MODEL` (optional, default `gpt-4.1-mini`)
 - `TELEGRAM_WEBHOOK_SECRET` (optional but recommended)
+- Do not set `PORT` manually in Render. Render injects this automatically.
 
 The included `Procfile` also defines:
 

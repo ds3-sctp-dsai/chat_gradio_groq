@@ -64,6 +64,11 @@ def health() -> Any:
     return jsonify({"status": "ok"})
 
 
+@app.get("/")
+def index() -> Any:
+    return jsonify({"status": "ok", "service": "telegram-openai-bot"})
+
+
 @app.post("/webhook/telegram")
 def telegram_webhook() -> Any:
     if TELEGRAM_WEBHOOK_SECRET:
