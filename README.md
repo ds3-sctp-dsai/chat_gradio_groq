@@ -2,7 +2,7 @@
 
 This project provides a Flask app that receives Telegram updates via webhook and replies using an OpenAI model.
 
-## 1. Install dependencies
+## Local Development
 
 ```bash
 uv venv
@@ -23,7 +23,7 @@ Set values in `.env`:
 - `OPENAI_MODEL` (optional)
 - `TELEGRAM_WEBHOOK_SECRET` (optional but recommended)
 
-## 3. Run the Flask app
+Run locally:
 
 ```bash
 python app.py
@@ -37,24 +37,39 @@ Health check:
 
 - `GET /health`
 
-## 4. Expose your local server publicly
+## Deploy on Render (Gunicorn)
 
-Telegram must reach your app on a public HTTPS URL (for example via ngrok, Cloudflare Tunnel, Render, Fly.io, etc.).
+Render Web Service settings:
 
-Example with ngrok (separate terminal):
+- Build command: `pip install -r requirements.txt`
+- Start command: `gunicorn app:app --bind 0.0.0.0:$PORT`
+- Python version: use your preferred 3.x version
 
-```bash
-ngrok http 8080
-```
+Environment variables in Render:
 
-Assume ngrok gives `https://abc123.ngrok.io`.
+- `TELEGRAM_BOT_TOKEN`
+- `OPENAI_API_KEY`
+- `OPENAI_MODEL` (optional, default `gpt-4.1-mini`)
+- `TELEGRAM_WEBHOOK_SECRET` (optional but recommended)
 
-## 5. Register Telegram webhook
+The included `Procfile` also defines:
+
+- `web: gunicorn app:app --bind 0.0.0.0:$PORT`
+
+After deploy, your Render app URL is usually:
+
+- `https://<your-service-name>.onrender.com`
+
+Webhook URL:
+
+- `https://<your-service-name>.onrender.com/webhook/telegram`
+
+## Register Telegram webhook
 
 ```bash
 export TELEGRAM_BOT_TOKEN="<your_bot_token>"
 export TELEGRAM_WEBHOOK_SECRET="<same_secret_as_env_optional>"
-export WEBHOOK_URL="https://abc123.ngrok.io/webhook/telegram"
+export WEBHOOK_URL="https://<your-service-name>.onrender.com/webhook/telegram"
 ./scripts/set_telegram_webhook.sh
 ```
 
